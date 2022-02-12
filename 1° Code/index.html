@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vue 3 Basics</title>
+    </head>
+    <body>
+        <div id="app">
+            <!--Tudo que estiver dentro de chave duplas,
+            significa que é uma variável e o VueJs ira olhar para
+            as variáveis definidas em data-->
+            {{ greeting }}
+        </div>
+    </body>
+
+    <!--Para instanciar o Vue na aplicação uso o script abaixo-->
+    <script src="https://unpkg.com/vue@next"></script>
+    <!--Agora script para setar a aplicação do Vue-->
+    <script>
+        //este é o objetos de opções... todas as minhas variáveis vão ficar aqui dentro
+        let app = Vue.createApp({
+            data: function() {
+                return{
+                     greeting: 'Hello Vue 4'
+                }
+            }
+        })
+        //comando mount, diz para criar os elementos que apresentam como id esta variável
+        app.mount('#app');
+    </script>
+</html>

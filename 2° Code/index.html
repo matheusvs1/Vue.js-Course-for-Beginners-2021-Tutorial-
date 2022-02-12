@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vue 3 Basics</title>
+        <style>
+            .box {
+                height: 200px;
+                width: 200px;
+                background-color: black;
+            }
+            .box.two {
+                background-color: blue;
+            }
+            .box.three {
+                background-color:blueviolet;
+            }
+            [v-cloak] {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+    <!--É possível notar que a aplicação tentar rederição antes de aplicar os
+    objetos do vue, para remover isto basta usar v-cloak-->
+        <div id="app" v-cloak>
+            {{ greeting }}
+            <!--Para interligar um elemento e uma variável dentro do objeto do vue, utilizo a diretiva v-model-->
+            <input v-model="greeting">
+
+            <hr />
+            <!--v-if ou v-show são bem similares, vão apresentar algo na tela 
+            ou não dependendo se a variável é true ou false.
+            diferença, v-if remove o elemento do DOM já v-show aplica um display: none na tag-->
+            <div v-show="isVisibleShow" class="box"></div>
+            <div v-if="isVisibleIf" class="box"></div>
+            <!--Além do v-if, logo após ele ser chamado, posso definir um 
+            v-else-if="xxx" e/ou v-else -->
+            <div v-else-if="isVisibleElseIf" class="box two"></div>
+            <div v-else class="box three"></div>
+        </div>
+    </body>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        let app = Vue.createApp({
+            data: function() {
+                return {
+                     greeting: 'Hello Vue 4',
+                     isVisibleIf: false,
+                     isVisibleShow: false,
+                     isVisibleElseIf: false
+                }
+            }
+        })
+        app.mount('#app');
+    </script>
+</html>

@@ -1,0 +1,1 @@
+## Nesta parte será visto Eventos e métodos utilizados pelo Vue
