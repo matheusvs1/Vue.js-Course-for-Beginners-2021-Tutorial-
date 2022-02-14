@@ -17,13 +17,15 @@
             [v-cloak] {
                 display: none;
             }
+            input {
+                margin: 10px;
+                display: block;
+            }
         </style>
     </head>
     <body>
         <div id="app" v-cloak>
-            {{ greeting }}
-            <input @keyup.enter="greet(greeting + '!!!!!!!!!')" v-model="greeting">
-
+            <custom-form/>
             <hr />
             <button @click="toggleBox">Toggle box</button>
             <div v-if="isVisible" class="box"></div>
@@ -48,6 +50,35 @@
                 }
             }
         })
+
+        /*Dentro do components, vou definir todas as componentes que serão acessadas na minha aplicação, por meio
+        de uma única tag... no caso estou criado uma na mão, mas geralmente se criar programas externos para defini-lás*/
+        app.component('custom-form', {
+            /*Lembrando as variáveis data() que deifnir aqui só valem dentro do template.*/
+            template: `
+                <form @submit.prevent="handleSubmit">
+                    <h1>{{ title }}</h1>
+                    <input type="email" v-model="email"/>
+                    <input type="password" v-model="password"/>
+                    <button>Log in</button>
+                </form>
+            `,
+            data() {
+                return {
+                    title: 'Login Form',
+                    email: '',
+                    password: ''
+                }
+            },
+            methods: {
+                handleSubmit() {
+                    console.log(this.email, this.password);
+                }
+            }
+        })
+        /*A nova tag customizada dop Vue.js (components), deve ser criada após a instância 
+        que cria o app do vue, para trazé-lo para aplicação(Vue.createApp)...
+         e antes do comando que monta o aplicativo na tela (app.mount('#app'))*/
         app.mount('#app');
     </script>
 </html>

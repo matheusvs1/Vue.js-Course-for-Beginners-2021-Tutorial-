@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vue 3 Basics</title>
+        <style>
+            .box {
+                height: 200px;
+                width: 200px;
+                background-color: black;
+            }
+            .box.two {
+                background-color: blue;
+            }
+            .box.three {
+                background-color:blueviolet;
+            }
+            [v-cloak] {
+                display: none;
+            }
+            input {
+                margin: 10px;
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <login-form/>
+            <hr />
+            <button @click="toggleBox">Toggle box</button>
+            <div v-if="isVisible" class="box"></div>
+        </div>
+    </body>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        let app = Vue.createApp({
+            data: function() {
+                return {
+                     greeting: 'Hello Vue 4',
+                     isVisible: false
+                }
+            },
+            methods: {
+                toggleBox() {
+                    this.isVisible = !this.isVisible;
+                },
+                greet(greeted) {
+                    console.log(greeted);
+                }
+            }
+        })
+
+        app.component('login-form', {
+            //Dentro de meu template estou chamado a nova componente que criei, porém há um detalhe especial
+            template: `
+                <form @submit.prevent="handleSubmit">
+                    <h1>{{ title }}</h1>
+                    <custom-input v-model="email" :label="emailLabel"/>
+                    <custom-input v-model="password" :label="passwordLabel"/>
+                    <button>Log in</button>
+                </form>
+            `,
+            /*Como mencionado, normalmente casa componente possui seus objetos isolado, porém o comnado abaixo,
+            faz com que o vueJs entenda que a componente dita, deve ser seus objetos compartilhados com este
+            
+            CONTUDO, para evitar confuções de objeto é necessário considerar um texto especial do vue,
+            v-bind... que no caso, permite que as variáveis data do objeto atual sejam linkadas as tag
+            das componente chamada*/
+            component: ['custom-input'],
+            data() {
+                return {
+                    title: 'Login Form',
+                    email: '',
+                    password: '',
+                    emailLabel: 'Email',
+                    passwordLabel: 'Password'
+                }
+            },
+            /*Resumo v-bind:
+            seu formato é : v-bind:propsName="variable"
+            onde o propsName é definido dentro da componente chamada, com seu respectivo nome apresendado dentro de 
+            props: ['name']
+            
+            Também, pode ser definido apenas como ':', ou seja--> :propsName="variable" */
+            methods: {
+                handleSubmit() {
+                    console.log(this.email, this.password);
+                }
+            }
+        })
+        /*No caso, estou criado uma nova componente que será utilizado dentro da componente original que já havia criado*/
+        app.component('custom-input', {
+            /*Consudo tempos um problema, o v-bind feito acima é uma vinha de mão única... temos que fazer com que
+            esta componente envie as informações de volta, para ela ser utilizada no submit*/
+            template: `
+                <label>
+                    {{ label }}
+                    <input type="text" v-model="inputValue">
+                </label>
+            `,
+            /*Quando eu defino uma tag com v-model, algumas coisas são definidas automáticamente
+            no caso o v-bind é feito automáticamente, então posso chamá-la com o this.modelValue
+            e o retorno do valor também é esperado automáticamente com o $emit('upgrade:modelvalue')*/
+            props: ['label', 'modelValue'],
+            /*utilizar computed para definir eventos de get() e set() é uma forma de solucionar o problemas
+            da variável esperada pela componente pai... mas é importante destacar que v]ao existir outras formas 
+            solucionar este problema*/
+            computed: {
+                inputValue: {
+                    get() {
+                        return this.modelValue
+                    },
+                    set(value) {
+                        this.$emit('update:modelValue', value);
+                    }
+                }
+            },
+        })
+        app.mount('#app');
+    </script>
+</html>
